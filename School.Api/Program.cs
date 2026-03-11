@@ -1,4 +1,12 @@
+using School.Application.Configuration;
+// unico motivo q infra ta na referencia de projeto
+using School.Infrastructure.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// meus configurations:
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // Add services to the container.
 
