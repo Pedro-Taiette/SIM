@@ -45,6 +45,8 @@ appsettings.Local.json
 *.db-wal
 *.sqlproj.user
 /artifacts/
+# Script SQL gerado por `dotnet ef migrations script` — artefato derivado, não commitar
+migration.sql
 
 ## --- OS Generated ---
 .DS_Store

@@ -1,23 +1,12 @@
 using SIM.Domain.Abstractions;
+using SIM.Infrastructure.Data;
 
 namespace SIM.Infrastructure.Repositories;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
 {
-    //private readonly SystemDbContext _context;
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
+        context.SaveChangesAsync(cancellationToken);
 
-    public UnitOfWork(
-        //SystemDbContext context,
-        //IUserRepository Users)
-    )
-    {
-        //_context = context;
-        //Users = Users;
-    }
-
-    //public async Task<bool> CommitAsync() => await _context.SaveChangesAsync() > 0;
-    public void Dispose()
-    {
-        return;
-    }
+    public void Dispose() => context.Dispose();
 }

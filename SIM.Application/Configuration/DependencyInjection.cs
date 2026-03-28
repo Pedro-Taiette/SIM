@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -9,7 +10,8 @@ public static class DependencyInjection
     {
         var assembly = Assembly.GetExecutingAssembly();
 
-        // Registro Automático de todos os Services - Terimnam com "Service"
+        services.AddValidatorsFromAssembly(assembly);
+
         var serviceTypes = assembly.GetTypes()
             .Where(t => t.Name.EndsWith("Service") && !t.IsInterface && !t.IsAbstract);
 
@@ -19,13 +21,9 @@ public static class DependencyInjection
                 .FirstOrDefault(t => t.IsInterface && t.Name == $"I{implementationType.Name}");
 
             if (interfaceType != null)
-            {
                 services.AddScoped(interfaceType, implementationType);
-            }
             else
-            {
                 services.AddScoped(implementationType);
-            }
         }
 
         return services;
