@@ -1,19 +1,59 @@
-using SIM.Domain.Abstractions;
-using SIM.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using SIM.Domain.Abstractions;
+using SIM.Infrastructure.Data;
+using SIM.Infrastructure.Repositories;
 
 namespace SIM.Infrastructure.Configuration;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        //services.AddDbContext<SystemDbContext>(options =>
-        //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Configures JWT Bearer authentication using Supabase's JWKS endpoint (RS256).
+    /// Keys are fetched automatically via OIDC discovery — no secret required in config.
+    /// </summary>
+    public static IServiceCollection AddSupabaseAuthentication(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var supabaseUrl = configuration["Supabase:Url"]
+            ?? throw new InvalidOperationException("Supabase:Url is not configured.");
+
+        var authority = $"{supabaseUrl}/auth/v1";
+
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                // Authority triggers OIDC discovery: fetches {authority}/.well-known/openid-configuration
+                // which points to the JWKS endpoint with Supabase's public keys.
+                options.Authority = authority;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = authority,
+                    ValidateAudience = true,
+                    ValidAudience = "authenticated",
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
 
         return services;
     }

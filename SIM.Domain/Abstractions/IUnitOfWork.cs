@@ -2,5 +2,5 @@ namespace SIM.Domain.Abstractions;
 
 public interface IUnitOfWork : IDisposable
 {
-    //Task<bool> CommitAsync();
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -1,29 +1,52 @@
-# SIM! Sistema de Infraestrutura para Medicamentos
-Projeto para a secretaria de inovação, visando facilitar a distribuição de medicamentos publicos.
+# SIM — Sensus Inventory Management
 
-## Como rodar:
-pra adicionar o seu banco é só usar o dotnet secrets, primeiro inicializamos ele com:
+Plataforma de gestão de inventário e logística de medicamentos para redes de farmácias públicas e privadas.
 
-```bash
-dotnet user-secrets init
-```
+---
 
-Dps rodamos o set:
+## Stack
 
-```bash
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "sua connection string aqui"
-```
+- .NET 10 / C# 13
+- Supabase: Auth (JWT RS256) + PostgreSQL
+- Entity Framework Core 10 + Npgsql 10
+- FluentValidation 12
 
-Vc pode ver se entrou certo fazendo o list
-```bash
-dotnet user-secrets list
-```
+## Pré-requisitos
 
-exemplo meu com localdb:
+| Ferramenta | Versão mínima |
+|------------|--------------|
+| .NET SDK | 10.0 |
+| EF Core CLI | 10.0 |
+| Git | qualquer |
 
 ```bash
-ConnectionStrings:DefaultConnection = Server=(localdb)\MSSQLLocalDB;Database=SchoolDb;Trusted_Connection=True;MultipleActiveResultSets=true
+dotnet tool install --global dotnet-ef
+dotnet --version    # 10.x.x
+dotnet ef --version # 10.x.x
 ```
 
-agr vc da um Update-Database com o terminal de gerenciador de pacotes nuget com o projeto School.Infrastructure selecionado (já montei as migrations)
-e já vai funcionar
+## Quick Start
+
+```bash
+git clone <url-do-repositorio>
+cd SIM/SIM.WebApi
+
+dotnet user-secrets set "Supabase:Url" "https://SEU_REF.supabase.co"
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "User Id=sim_api.SEU_REF;Password=SENHA;Server=aws-0-REGIAO.pooler.supabase.com;Port=5432;Database=postgres;No Reset On Close=true"
+
+cd ..
+dotnet run --project SIM.WebApi
+```
+
+Scalar UI (documentação interativa): `https://localhost:PORTA/scalar`
+
+---
+
+## Documentação
+
+- [Arquitetura](docs/architecture.md)
+- [Banco de Dados & Supabase](docs/database.md)
+- [Configuração](docs/configuration.md)
+- [Autenticação & Autorização](docs/authentication.md)
+- [Code Standards](docs/code-standards.md)
+- [API Reference](docs/api-reference.md)

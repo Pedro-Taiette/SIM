@@ -2,17 +2,26 @@ namespace SIM.Domain.Constants;
 
 public static class ValidationMessages
 {
-    public const string UserNameRequired = "O nome do aluno é obrigatório.";
-    public const string UserNameTooLong = "O nome deve ter no máximo 50 caracteres.";
-    public const string InvalidEmailDomain = "O e-mail deve pertencer ao domínio @faculdade.edu.";
-    public const string DuplicateEmail = "Já existe um aluno matriculado com este e-mail.";
-    public const string UserNotFound = "Aluno não encontrado.";
-    public const string CourseNotFound = "Curso não encontrado.";
-    public const string CourseTitleRequired = "O título do curso é obrigatório.";
-    public const string InvalidWorkload = "A carga horária é inválida.";
-    public const string EnrollmentLimitExceeded = "Limite de carga horária excedido.";
-    public const string EnrollmentDuplicate = "Aluno já está matriculado neste curso.";
-    public const string EnrollmentNotFound = "Matrícula não encontrada.";
-    public const string InvalidUserId = "ID do aluno inválido.";
-    public const string InvalidCourseId = "ID do curso inválido.";
+    // User Profile
+    public const string FullNameRequired = "Full name is required.";
+    public const string FullNameTooLong = "Full name must not exceed 200 characters.";
+    public const string EmailRequired = "Email is required.";
+    public const string EmailInvalid = "Email must be a valid address.";
+    public const string EmailAlreadyExists = "A user with this email already exists.";
+    public const string UserNotFound = "User not found.";
+    public const string SupabaseUserIdRequired = "Supabase user ID is required.";
+
+    // Organization
+    public const string OrganizationNameRequired = "Organization name is required.";
+    public const string OrganizationNameTooLong = "Organization name must not exceed 200 characters.";
+    public const string OrganizationRequired = "Organization ID is required.";
+    public const string OrganizationNotFound = "Organization not found.";
+    public const string CnpjRequired = "CNPJ is required.";
+    public const string CnpjInvalid = "CNPJ must contain 14 numeric digits.";
+
+    // Product
+    public const string ProductNameRequired = "Product name is required.";
+    public const string ProductNameTooLong = "Product name must not exceed 200 characters.";
+    public const string ProductNotFound = "Product not found.";
+    public const string ProductDescriptionTooLong = "Product description must not exceed 1000 characters.";
 }
