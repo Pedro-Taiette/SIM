@@ -1,5 +1,4 @@
-# SIM — Sensus Inventory Management
-
+# SIM
 Plataforma de gestão de inventário e logística de medicamentos para redes de farmácias públicas e privadas.
 
 ---
