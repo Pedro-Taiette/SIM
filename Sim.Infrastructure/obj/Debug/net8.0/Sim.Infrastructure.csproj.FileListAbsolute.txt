@@ -1,5 +1,0 @@
-C:\Users\Aula\Desktop\SIM-main\SIM-main\School.Infrastructure\obj\Debug\net8.0\Sim.Infrastructure.csproj.AssemblyReference.cache
-C:\Users\Aula\Desktop\SIM-main\SIM-main\School.Infrastructure\obj\Debug\net8.0\Sim.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Aula\Desktop\SIM-main\SIM-main\School.Infrastructure\obj\Debug\net8.0\Sim.Infrastructure.AssemblyInfoInputs.cache
-C:\Users\Aula\Desktop\SIM-main\SIM-main\School.Infrastructure\obj\Debug\net8.0\Sim.Infrastructure.AssemblyInfo.cs
-C:\Users\Aula\Desktop\SIM-main\SIM-main\School.Infrastructure\obj\Debug\net8.0\Sim.Infrastructure.csproj.CoreCompileInputs.cache

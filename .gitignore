@@ -1,28 +1,70 @@
+## --- Dotnet Build Artifacts ---
 [Bb]in/
 [Oo]bj/
+[Tt]est[Rr]esults/
 
+## --- NuGet Packages ---
+# Ignora pacotes baixados localmente, mas permite arquivos de configuração necessários
 packages/
+!packages/build/
 *.nuget.props
 *.nuget.targets
 
-## Visual Studio
+## --- Visual Studio ---
 .vs/
 *.user
 *.userosscache
 *.sln.docstates
+*.suo
+*.vstoken
+*.dbmdl
+*.jfm
 
-## Visual Studio Code
-.vscode/
+## --- Visual Studio Code ---
+.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+*.code-workspace
 
-## Configura��es de ambiente 
+## --- Environment & Secrets (Crítico para DDD/WebAPI) ---
+# Nunca suba segredos ou configurações locais de desenvolvimento
 .env
+.env.*
 appsettings.Development.json
-UserSecrets/
+appsettings.Local.json
+[Uu]ser[Ss]ecrets/
+*.pfx
+*.publishsettings
 
-## Sistema Operacional
+## --- Entity Framework Core & Databases ---
+# Ignora bancos de dados locais gerados durante o desenvolvimento
+*.db
+*.db-shm
+*.db-wal
+*.sqlproj.user
+/artifacts/
+
+## --- OS Generated ---
 .DS_Store
+.DS_Store?
+._*
 Thumbs.db
+ehthumbs.db
+desktop.ini
+
+## --- Tools & Documentation ---
+# Arquivos de log e relatórios de cobertura de código
+*.log
+/nlog/
+/logs/
+coverage/
+*.lcov
+.ionide/
+
+## --- Frontend (Se houver Blazor ou Mobile/Flutter acoplado) ---
+node_modules/
+.flutter-plugins
+.flutter-plugins-dependencies
+.dart_tool/
