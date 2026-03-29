@@ -7,7 +7,8 @@ public interface ICurrentUserService
 
     /// <summary>
     /// The organization the authenticated user belongs to.
-    /// Null for SuperAdmin users, who operate across all organizations.
+    /// SuperAdmin users belong to the SimSuporte org — this is never null for authenticated users.
+    /// Returns null only for unauthenticated requests.
     /// </summary>
     Guid? OrganizationId { get; }
 
