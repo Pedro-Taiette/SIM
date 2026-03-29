@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { tokenStorage } from './tokenStorage'
+import { useAuthStore } from '../store/authStore'
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -24,14 +25,19 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// On 401: attempt one token refresh, then retry the original request
-// Uses a queue to prevent multiple simultaneous refresh calls
+// On 401: attempt one token refresh, then retry the original request.
+// Uses a queue to prevent multiple simultaneous refresh calls.
 let isRefreshing = false
 let queue: Array<{ resolve: (token: string) => void; reject: (error: unknown) => void }> = []
 
 function processQueue(error: unknown, token: string | null): void {
   queue.forEach((p) => (error ? p.reject(error) : p.resolve(token!)))
   queue = []
+}
+
+function expireSession(): void {
+  tokenStorage.clear()
+  useAuthStore.getState().signOut()
 }
 
 api.interceptors.response.use(
@@ -45,7 +51,7 @@ api.interceptors.response.use(
 
     const refreshToken = tokenStorage.getRefreshToken()
     if (!refreshToken) {
-      tokenStorage.clear()
+      expireSession()
       return Promise.reject(error)
     }
 
@@ -66,13 +72,14 @@ api.interceptors.response.use(
 
     try {
       const { data } = await authClient.post('/api/auth/refresh', { refreshToken })
-      tokenStorage.save(data.accessToken, data.refreshToken, data.expiresIn)
+      const email = tokenStorage.getEmail() ?? ''
+      tokenStorage.save(data.accessToken, data.refreshToken, data.expiresIn, email)
       processQueue(null, data.accessToken)
       originalRequest.headers.Authorization = `Bearer ${data.accessToken}`
       return api(originalRequest)
     } catch (refreshError) {
       processQueue(refreshError, null)
-      tokenStorage.clear()
+      expireSession()
       return Promise.reject(refreshError)
     } finally {
       isRefreshing = false

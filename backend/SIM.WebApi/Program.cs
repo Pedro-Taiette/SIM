@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Scalar.AspNetCore;
 using SIM.Application.Abstractions;
 using SIM.Application.Configuration;

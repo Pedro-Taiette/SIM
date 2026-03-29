@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Cors.Infrastructure;
-
 namespace SIM.WebApi.Configuration;
 
 public static class CorsExtensions
