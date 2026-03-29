@@ -1,14 +1,17 @@
 import { createContext, useEffect, useState, type ReactNode } from 'react'
-import type { Session, User } from '@supabase/supabase-js'
-import { supabase } from '../lib/supabase'
+import { api } from '../lib/api'
+import { tokenStorage } from '../lib/tokenStorage'
+
+interface AuthUser {
+  email: string
+}
 
 interface AuthContextValue {
-  session: Session | null
-  user: User | null
+  user: AuthUser | null
   isAuthenticated: boolean
   isLoading: boolean
   signIn: (email: string, password: string) => Promise<void>
-  signOut: () => Promise<void>
+  signOut: () => void
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null)
@@ -18,36 +21,37 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [session, setSession] = useState<Session | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // onAuthStateChange fires immediately with the current session,
-    // so this single listener handles both initialization and future changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, currentSession) => {
-      setSession(currentSession)
-      setIsLoading(false)
-    })
-
-    return () => subscription.unsubscribe()
+    // Restore session from localStorage on app load
+    if (tokenStorage.hasSession() && !tokenStorage.isExpired()) {
+      // We store the email alongside the tokens so we can restore the user object
+      const email = localStorage.getItem('sim_user_email')
+      if (email) setUser({ email })
+    }
+    setIsLoading(false)
   }, [])
 
   async function signIn(email: string, password: string): Promise<void> {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) throw error
+    const { data } = await api.post('/api/auth/login', { email, password })
+    tokenStorage.save(data.accessToken, data.refreshToken, data.expiresIn)
+    localStorage.setItem('sim_user_email', email)
+    setUser({ email })
   }
 
-  async function signOut(): Promise<void> {
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
+  function signOut(): void {
+    tokenStorage.clear()
+    localStorage.removeItem('sim_user_email')
+    setUser(null)
   }
 
   return (
     <AuthContext.Provider
       value={{
-        session,
-        user: session?.user ?? null,
-        isAuthenticated: session !== null,
+        user,
+        isAuthenticated: user !== null,
         isLoading,
         signIn,
         signOut,
